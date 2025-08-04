@@ -10,32 +10,20 @@ const Register = () => {
 
   const onSubmit = async (data) => {
     try {
+      // First: CSRF cookie (only needed for Sanctum)
+      // Then: Register
       const response = await axios.post(
         "http://127.0.0.1:8000/api/register",
         data,
         {
-          withCredentials: true, // If using Sanctum with cookies
+          withCredentials: true, // only if using Sanctum with cookies
         }
       );
-
-      console.log("Registration Success:", response.data);
-      localStorage.setItem("token", response.data.token);
-      alert("Registration successful");
-      // Optionally redirect to dashboard or login page
+      console.log(response.data);
     } catch (error) {
-      if (error.response) {
-        console.error("Registration Error:", error.response.data);
-        alert(
-          "Registration failed: " +
-            JSON.stringify(
-              error.response.data.errors || error.response.data.message
-            )
-        );
-      } else {
-        console.error("Unexpected Error:", error.message);
-        alert("Registration failed: Unexpected error");
-      }
+      console.error(error.response?.data || error.message);
     }
+
   };
 
   return (
